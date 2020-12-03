@@ -1,5 +1,12 @@
+//-*- Mode: js2; js2-basic-offset: 2;  tab-width: 2; -*-
+//author: JackRed <jackred@tuta.io>
+
+'use strict';
+
 const Discord = require('discord.js');
 const config = require('./config.json');
+const { executeFunction } = require('./src/Utility');
+const { reactToAdd } = require('./src/React');
 
 const client = new Discord.Client({
   partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
@@ -17,11 +24,9 @@ client.on('message', (msg) => {
   console.log(msg.content);
 });
 
-client.on('messageReactionAdd', reactToAdd);
-
-function reactToAdd(react, user) {
-  console.log(react.emoji.name, user.tag);
-}
+client.on('messageReactionAdd', (react, user) =>
+  executeFunction(reactToAdd, [react, user], react.message.guild)
+);
 
 client
   .login(config.token)
