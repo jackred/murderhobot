@@ -1,0 +1,9 @@
+{
+  "token": "token",
+  "messages": {
+    "<ID Message>": "play",
+    "<ID Message>": "create",
+    "<ID Message>": "mj"
+  },
+  "logErrorChannelID": "<ID channel>"
+}
