@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  discord_bot:
+    container_name: murderhobot
+    build: .
+    volumes:
+      - ./config.json:/usr/src/murderhobot/config.json
+    restart: always
+
+networks:
+  default:
+    external:
+      name: ng_network

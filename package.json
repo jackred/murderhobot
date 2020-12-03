@@ -1,0 +1,27 @@
+{
+  "name": "murderhobot",
+  "version": "1.0.0",
+  "description": "a simple discord bot to manage channel / permission for murder party",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackred/murderhobot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "murder"
+  ],
+  "author": "jackred <jackred@tuta.io>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jackred/murderhobot/issues"
+  },
+  "homepage": "https://github.com/jackred/murderhobot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
