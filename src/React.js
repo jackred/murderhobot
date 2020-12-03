@@ -27,7 +27,9 @@ async function requestMj(user, react) {
       await react.message.guild.member(user).roles.add(config.talkMJRoleID);
     };
     const channel = react.message.guild.channels.resolve(config.mjChannelID);
-    await createMessageValidate(channel, fnTxt, fn);
+    await createMessageValidate(channel, fnTxt, fn, [
+      react.message.guild.ownerID,
+    ]);
   } else {
     console.log('ignore emoji');
   }
@@ -50,6 +52,10 @@ async function reactToAdd(react, user) {
     return;
   }
   switch (config.messages[react.message.id]) {
+    case '': {
+      await react.remove();
+      await react.message.react(react.emoji);
+    }
     case 'mj': {
       await requestMj(user, react);
       break;
@@ -66,8 +72,6 @@ async function reactToAdd(react, user) {
       console.log('Reaction added to a non special messages');
     }
   }
-  await react.remove();
-  await react.message.react(react.emoji);
 }
 
 module.exports = {
