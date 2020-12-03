@@ -18,6 +18,9 @@ async function createChannelDiscussion(user, react) {
 }
 
 async function reactToAdd(react, user) {
+  if (user.bot) {
+    return;
+  }
   switch (config.messages[react.message.id]) {
     case 'mj': {
       await requestMj(user, react);
