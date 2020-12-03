@@ -16,10 +16,12 @@ client.on('ready', () => {
   console.log('Starting!');
   client.user.setActivity('Murdering!');
   const chan = client.channels.resolve(config.rulesChannelID);
-  const emoji = '✅';
-  chan.messages
-    .fetchPinned()
-    .then((msgs) => msgs.forEach((msg) => msg.react(emoji)));
+  chan.messages.fetchPinned().then((msgs) =>
+    msgs.forEach(async (msg) => {
+      await msg.reactions.removeAll();
+      await msg.react(config.emoji);
+    })
+  );
 });
 
 client.on('message', (msg) => {

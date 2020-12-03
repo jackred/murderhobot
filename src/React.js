@@ -4,13 +4,41 @@
 'use strict';
 
 const config = require('../config.json');
+const { createMessageValidate } = require('./Utility');
 
 async function requestMj(user, react) {
-  console.log('requestMj');
+  if (react.emoji.name === config.emoji) {
+    const fnTxt = (nb) => {
+      let res = '';
+      switch (nb) {
+        case 1: {
+          res = `${user.tag} want to talk with you`;
+          break;
+        }
+        case 2: {
+          res = `${user.tag} can now talk to you`;
+          break;
+        }
+      }
+      console.log(res);
+      return res;
+    };
+    const fn = async () => {
+      await react.message.guild.member(user).roles.add(config.talkMJRoleID);
+    };
+    const channel = react.message.guild.channels.resolve(config.mjChannelID);
+    await createMessageValidate(channel, fnTxt, fn);
+  } else {
+    console.log('ignore emoji');
+  }
 }
 
 async function createChannelOnePlayer(user, react) {
-  console.log('createChannelOnePlayer');
+  console.log(
+    'createChannelOnePlayer',
+    react.emoji.name,
+    react.emoji.identifier
+  );
 }
 
 async function createChannelDiscussion(user, react) {
@@ -38,6 +66,8 @@ async function reactToAdd(react, user) {
       console.log('Reaction added to a non special messages');
     }
   }
+  await react.remove();
+  await react.message.react(react.emoji);
 }
 
 module.exports = {

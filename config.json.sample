@@ -5,5 +5,9 @@
     "<ID Message>": "create",
     "<ID Message>": "mj"
   },
-  "logErrorChannelID": "<ID channel>"
+  "logErrorChannelID": "<ID channel>",
+  "rulesChannelID": "<ID channel>",
+  "mjChannelID": "ID channel",
+  "talkMJRoleID": "ID role",
+  "emoji": "✅"
 }
