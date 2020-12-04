@@ -56,8 +56,14 @@ async function createMessageValidate(channel, fnTxt, fnCol, users) {
   createCollectorValidate(msg, fn, users);
 }
 
+// https://stackoverflow.com/a/28191966/8040287
+function getKeyByValue(object, value) {
+  return Object.keys(object).find((key) => object[key] === value);
+}
+
 module.exports = {
   executeFunction,
   sendError,
   createMessageValidate,
+  getKeyByValue,
 };

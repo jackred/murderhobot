@@ -4,7 +4,7 @@
 'use strict';
 
 const config = require('../config.json');
-const { createMessageValidate } = require('./Utility');
+const { createMessageValidate, getKeyByValue } = require('./Utility');
 
 async function requestMj(user, react) {
   if (react.emoji.name === config.emoji) {
@@ -72,7 +72,8 @@ async function reactToAdd(react, user) {
     return;
   }
   let reactBool = true;
-  switch (config.messages[react.message.id]) {
+  const id = getKeyByValue(config.messages, react.message.id);
+  switch (id) {
     case 'mj': {
       await requestMj(user, react);
       break;
