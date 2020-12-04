@@ -3,6 +3,9 @@
 
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+
 const config = require('../config.json');
 const { createMessageValidate, getKeyByValue } = require('./Utility');
 
@@ -60,16 +63,22 @@ async function createChannelOnePlayer(user, react) {
           },
         ],
       });
+      const msg = await react.message.channel.messages.fetch(
+        config.messages.create
+      );
+      const emoji = getEmojiNumber(msg);
+      await msg.react(emoji);
+      const filepath = path.resolve(__dirname, '../player.json');
+      let data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+      data[emoji] = user.id;
+      fs.writeFileSync(filepath, JSON.stringify(data));
     } else {
       await channel.send(
         `Vous avez déjà un channel de discussion personnel ici ${user}`
       );
     }
   }
-  const msg = await react.message.channel.messages.fetch(
-    config.messages.create
-  );
-  await msg.react(getEmojiNumber(msg));
+
   return true;
 }
 
