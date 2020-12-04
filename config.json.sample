@@ -7,7 +7,7 @@
   },
   "logErrorChannelID": "<ID channel>",
   "rulesChannelID": "<ID channel>",
-  "mjChannelID": "ID channel",
-  "talkMJRoleID": "ID role",
-  "emoji": "✅"
+  "mjChannelID": "<ID channel>",
+  "talkMJRoleID": "<ID role>",
+  "emoji": {"validate": "✅", "players": ["0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣"]}
 }

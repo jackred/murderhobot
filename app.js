@@ -19,7 +19,7 @@ client.on('ready', () => {
   chan.messages.fetchPinned().then((msgs) =>
     msgs.forEach(async (msg) => {
       await msg.reactions.removeAll();
-      await msg.react(config.emoji);
+      await msg.react(config.emoji.validate);
     })
   );
 });

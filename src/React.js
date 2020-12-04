@@ -7,7 +7,7 @@ const config = require('../config.json');
 const { createMessageValidate, getKeyByValue } = require('./Utility');
 
 async function requestMj(user, react) {
-  if (react.emoji.name === config.emoji) {
+  if (react.emoji.name === config.emoji.validate) {
     const fnTxt = (nb) => {
       let res = '';
       switch (nb) {
@@ -33,10 +33,15 @@ async function requestMj(user, react) {
   } else {
     console.log('ignore emoji');
   }
+  return true;
+}
+
+function getEmojiNumber(msg) {
+  return config.emoji.players[msg.reactions.cache.size - 1];
 }
 
 async function createChannelOnePlayer(user, react) {
-  if (react.emoji.name === config.emoji) {
+  if (react.emoji.name === config.emoji.validate) {
     const guild = react.message.guild;
     const channel = guild.channels.cache.find((c) => {
       return c.name.startsWith(user.tag.replace('#', '').toLowerCase());
@@ -61,6 +66,11 @@ async function createChannelOnePlayer(user, react) {
       );
     }
   }
+  const msg = await react.message.channel.messages.fetch(
+    config.messages.create
+  );
+  await msg.react(getEmojiNumber(msg));
+  return true;
 }
 
 async function createChannelDiscussion(user, react) {
@@ -71,27 +81,26 @@ async function reactToAdd(react, user) {
   if (user.bot) {
     return;
   }
-  let reactBool = true;
+  let reactBool = false;
   const id = getKeyByValue(config.messages, react.message.id);
   switch (id) {
     case 'mj': {
-      await requestMj(user, react);
+      reactBool = await requestMj(user, react);
       break;
     }
     case 'play': {
-      await createChannelOnePlayer(user, react);
+      reactBool = await createChannelOnePlayer(user, react);
       break;
     }
     case 'create': {
-      await createChannelDiscussion(user, react);
+      reactBool = await createChannelDiscussion(user, react);
       break;
     }
     default: {
       console.log('Reaction added to a non special messages');
-      react = false;
     }
   }
-  if (react) {
+  if (reactBool) {
     await react.remove();
     await react.message.react(react.emoji);
   }

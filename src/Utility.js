@@ -39,7 +39,7 @@ async function executeFunction(fn, args, guild) {
 
 function createCollectorValidate(msg, fn, users) {
   const filter = (reaction, user) =>
-    reaction.emoji.name === config.emoji && users.includes(user.id);
+    reaction.emoji.name === config.emoji.validate && users.includes(user.id);
   const collector = msg.createReactionCollector(filter, { time: 15000 });
   collector.on('collect', (r) => {
     executeFunction(fn, [], msg.guild);
@@ -48,7 +48,7 @@ function createCollectorValidate(msg, fn, users) {
 
 async function createMessageValidate(channel, fnTxt, fnCol, users) {
   const msg = await channel.send(fnTxt(1));
-  await msg.react(config.emoji);
+  await msg.react(config.emoji.validate);
   const fn = async () => {
     await fnCol();
     await msg.edit(fnTxt(2));
