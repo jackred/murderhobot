@@ -36,11 +36,31 @@ async function requestMj(user, react) {
 }
 
 async function createChannelOnePlayer(user, react) {
-  console.log(
-    'createChannelOnePlayer',
-    react.emoji.name,
-    react.emoji.identifier
-  );
+  if (react.emoji.name === config.emoji) {
+    const guild = react.message.guild;
+    const channel = guild.channels.cache.find((c) => {
+      return c.name.startsWith(user.tag.replace('#', '').toLowerCase());
+    });
+    if (channel === undefined) {
+      await guild.channels.create(user.tag + ' channel', {
+        parent: react.message.channel.parentID,
+        permissionOverwrites: [
+          {
+            id: guild.roles.everyone,
+            deny: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+          },
+          {
+            id: user.id,
+            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+          },
+        ],
+      });
+    } else {
+      await channel.send(
+        `Vous avez déjà un channel de discussion personnel ici ${user}`
+      );
+    }
+  }
 }
 
 async function createChannelDiscussion(user, react) {
@@ -51,11 +71,8 @@ async function reactToAdd(react, user) {
   if (user.bot) {
     return;
   }
+  let reactBool = true;
   switch (config.messages[react.message.id]) {
-    case '': {
-      await react.remove();
-      await react.message.react(react.emoji);
-    }
     case 'mj': {
       await requestMj(user, react);
       break;
@@ -70,7 +87,12 @@ async function reactToAdd(react, user) {
     }
     default: {
       console.log('Reaction added to a non special messages');
+      react = false;
     }
+  }
+  if (react) {
+    await react.remove();
+    await react.message.react(react.emoji);
   }
 }
 

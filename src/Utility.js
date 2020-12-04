@@ -18,7 +18,6 @@ async function sendError(error, guild) {
   try {
     console.log(error);
     let channel = guild.channels.resolve(config.logErrorChannelID);
-    console.log(channel.name);
     if (channel === undefined) {
       console.log('Log channel not found');
     } else {
