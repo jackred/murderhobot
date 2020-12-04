@@ -37,7 +37,7 @@ async function requestMj(user, react) {
           await react.message.guild.channels.cache
             .find((c) =>
               c.name.startsWith(
-                user.tag.replace('#', '').replace(' ', '').toLowerCase()
+                user.tag.replace('#', '').replace(' ', '-').toLowerCase()
               )
             )
             .send(`${user} Vous pouvez rejoindre le Channel vocal avec le MJ`);
