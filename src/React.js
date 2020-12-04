@@ -14,25 +14,44 @@ async function requestMj(user, react) {
     const fnTxt = (nb) => {
       let res = '';
       switch (nb) {
-        case 1: {
+        case 0: {
           res = `${user.tag} want to talk with you`;
           break;
         }
+        case 1: {
+          res = `${user.tag} can now talk to you. Remove him?`;
+          break;
+        }
         case 2: {
-          res = `${user.tag} can now talk to you`;
+          res = `${user.tag} was removed`;
           break;
         }
       }
       console.log(res);
       return res;
     };
-    const fn = async () => {
-      await react.message.guild.member(user).roles.add(config.talkMJRoleID);
+    const fn = async (i) => {
+      switch (i) {
+        case 1: {
+          await react.message.guild.member(user).roles.add(config.talkMJRoleID);
+          break;
+        }
+        case 2: {
+          await react.message.guild
+            .member(user)
+            .roles.remove(config.talkMJRoleID);
+          break;
+        }
+      }
     };
     const channel = react.message.guild.channels.resolve(config.mjChannelID);
-    await createMessageValidate(channel, fnTxt, fn, [
-      react.message.guild.ownerID,
-    ]);
+    await createMessageValidate(
+      channel,
+      fnTxt,
+      fn,
+      [react.message.guild.ownerID],
+      1
+    );
   } else {
     console.log('ignore emoji');
   }
@@ -69,7 +88,12 @@ async function createChannelOnePlayer(user, react) {
       const emoji = getEmojiNumber(msg);
       await msg.react(emoji);
       const filepath = path.resolve(__dirname, '../player.json');
-      let data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+      let data;
+      try {
+        data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+      } catch (e) {
+        data = {};
+      }
       data[emoji] = user.id;
       fs.writeFileSync(filepath, JSON.stringify(data));
     } else {

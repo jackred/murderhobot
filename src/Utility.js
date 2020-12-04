@@ -37,23 +37,30 @@ async function executeFunction(fn, args, guild) {
   }
 }
 
-function createCollectorValidate(msg, fn, users) {
+function createCollectorValidate(msg, fn, users, n = 1) {
   const filter = (reaction, user) =>
     reaction.emoji.name === config.emoji.validate && users.includes(user.id);
-  const collector = msg.createReactionCollector(filter, { time: 15000 });
-  collector.on('collect', (r) => {
-    executeFunction(fn, [], msg.guild);
+  const collector = msg.createReactionCollector(filter, { max: n + 1 });
+  collector.on('collect', () => {
+    executeFunction(fn, [collector], msg.guild);
   });
+  collector.on('end', () => console.log('end'));
 }
 
-async function createMessageValidate(channel, fnTxt, fnCol, users) {
-  const msg = await channel.send(fnTxt(1));
+async function createMessageValidate(channel, fnTxt, fnCol, users, n = 1) {
+  const msg = await channel.send(fnTxt(0));
   await msg.react(config.emoji.validate);
+  let i = 1;
   const fn = async () => {
-    await fnCol();
-    await msg.edit(fnTxt(2));
+    await fnCol(i);
+    await msg.edit(fnTxt(i));
+    await msg.reactions.resolve(config.emoji.validate).remove();
+    if (i <= n) {
+      await msg.react(config.emoji.validate);
+    }
+    i++;
   };
-  createCollectorValidate(msg, fn, users);
+  createCollectorValidate(msg, fn, users, n);
 }
 
 // https://stackoverflow.com/a/28191966/8040287
