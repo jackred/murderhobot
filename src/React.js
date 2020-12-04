@@ -34,6 +34,11 @@ async function requestMj(user, react) {
       switch (i) {
         case 1: {
           await react.message.guild.member(user).roles.add(config.talkMJRoleID);
+          await react.message.guild.channels.cache
+            .find((c) =>
+              c.name.startsWith(user.tag.replace('#', '').toLowerCase())
+            )
+            .send('Vous pouvez rejoindre le Channel vocal avec le MJ');
           break;
         }
         case 2: {
@@ -58,10 +63,6 @@ async function requestMj(user, react) {
   return true;
 }
 
-function getEmojiNumber(msg) {
-  return config.emoji.players[msg.reactions.cache.size - 1];
-}
-
 async function createChannelOnePlayer(user, react) {
   if (react.emoji.name === config.emoji.validate) {
     const guild = react.message.guild;
@@ -82,20 +83,6 @@ async function createChannelOnePlayer(user, react) {
           },
         ],
       });
-      const msg = await react.message.channel.messages.fetch(
-        config.messages.create
-      );
-      const emoji = getEmojiNumber(msg);
-      await msg.react(emoji);
-      const filepath = path.resolve(__dirname, '../player.json');
-      let data;
-      try {
-        data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-      } catch (e) {
-        data = {};
-      }
-      data[emoji] = user.id;
-      fs.writeFileSync(filepath, JSON.stringify(data));
     } else {
       await channel.send(
         `Vous avez déjà un channel de discussion personnel ici ${user}`
