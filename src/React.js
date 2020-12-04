@@ -40,7 +40,7 @@ async function requestMj(user, react) {
                 user.tag
                   .replace('#', '')
                   .replace(' ', '-')
-                  .replace('.', '-')
+                  .replace('.', '')
                   .toLowerCase()
               )
             )
