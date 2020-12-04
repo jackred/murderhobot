@@ -36,9 +36,11 @@ async function requestMj(user, react) {
           await react.message.guild.member(user).roles.add(config.talkMJRoleID);
           await react.message.guild.channels.cache
             .find((c) =>
-              c.name.startsWith(user.tag.replace('#', '').toLowerCase())
+              c.name.startsWith(
+                user.tag.replace('#', '').replace(' ', '').toLowerCase()
+              )
             )
-            .send('Vous pouvez rejoindre le Channel vocal avec le MJ');
+            .send(`${user} Vous pouvez rejoindre le Channel vocal avec le MJ`);
           break;
         }
         case 2: {
